@@ -13,16 +13,26 @@ const App = () => {
 
 	return (
 		<div>
-			<Search filter={newFilter} updateFilter={setFilter} />
-			<Form
-				people={persons}
-				newPerson={newName}
-				newNumber={newNumber}
-				updatePerson={setPersons}
-				updateText={setNewName}
-				updateNumber={setNewNumber}
-			/>
-			<Numbers people={persons} filter={newFilter} />
+			<section>
+				<h2>Phonebook</h2>
+				<p>filter shown with a </p>
+				<Search filter={newFilter} updateFilter={setFilter} />
+			</section>
+			<section>
+				<h2>add a new</h2>
+				<Form
+					people={persons}
+					newPerson={newName}
+					newNumber={newNumber}
+					updatePerson={setPersons}
+					updateText={setNewName}
+					updateNumber={setNewNumber}
+				/>
+			</section>
+			<section>
+				<h2>Numbers</h2>
+				<Numbers people={persons} filter={newFilter} />
+			</section>
 		</div>
 	);
 };

@@ -21,12 +21,7 @@ const Numbers = ({ people, filter }) => {
 		));
 	};
 
-	return (
-		<div>
-			<h2>Numbers</h2>
-			{applyFilter(filter)}
-		</div>
-	);
+	return <>{applyFilter(filter)}</>;
 };
 
 export default Numbers;

@@ -9,13 +9,11 @@ const Search = ({ filter, updateFilter }) => {
 	};
 
 	return (
-		<div>
-			<h2>Phonebook</h2>
-			<p>filter shown with a </p>
+		<>
 			<form>
 				<input onChange={search} value={filter} />
 			</form>
-		</div>
+		</>
 	);
 };
 

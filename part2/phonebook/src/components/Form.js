@@ -32,8 +32,7 @@ const Form = ({ people, newPerson, newNumber, updateText, updateNumber, updatePe
 	};
 
 	return (
-		<div>
-			<h2>add a new</h2>
+		<>
 			<form>
 				<div>
 					name: <input onChange={handlePersonChange} value={newPerson} />
@@ -47,7 +46,7 @@ const Form = ({ people, newPerson, newNumber, updateText, updateNumber, updatePe
 					</button>
 				</div>
 			</form>
-		</div>
+		</>
 	);
 };
 
