@@ -1,15 +1,22 @@
 /** @format */
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Form from "./components/Form";
 import Numbers from "./components/Numbers";
 import Search from "./components/Search";
+import axios from "axios";
 
 const App = () => {
-	const [persons, setPersons] = useState([{ id: 1, name: "Arto Hellas", number: "040-123456" }]);
+	const [persons, setPersons] = useState([]);
 	const [newName, setNewName] = useState("");
 	const [newNumber, setNewNumber] = useState("");
 	const [newFilter, setFilter] = useState("");
+
+	useEffect(() => {
+		axios.get("http://localhost:3001/persons").then((res) => {
+			setPersons(res.data);
+		});
+	}, []);
 
 	return (
 		<div>
