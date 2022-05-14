@@ -3,14 +3,12 @@
 import { useEffect, useState } from "react";
 import Search from "./components/Search";
 import Result from "./components/Result";
-import Display from "./components/Display";
 const axios = require("axios").default;
 
 function App() {
 	const [countries, setCountries] = useState([]);
 	const [newSearch, setSearch] = useState("");
 	const [newFilter, setFilter] = useState([]);
-	const [show, setShow] = useState("");
 
 	const dict = countries.map((country, index) => ({
 		name: country.name.common,
@@ -40,8 +38,7 @@ function App() {
 				/>
 			</section>
 			<section>
-				<Result filter={newFilter} show={show} setShow={setShow} />
-				<Display data={newFilter} show={show} />
+				<Result filter={newFilter} />
 			</section>
 		</div>
 	);

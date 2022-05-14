@@ -5,10 +5,12 @@ import React from "react";
 const Search = ({ countries, newSearch, setSearch, setFilter }) => {
 	const filter = (event) => {
 		const input = event.target.value;
+		setSearch(input);
+
 		if (input === "") {
+			setFilter([]);
 			return;
 		}
-		setSearch(input);
 
 		const filtered = countries
 			.filter((country) => country.name.toUpperCase().indexOf(input.toUpperCase()) > -1)
