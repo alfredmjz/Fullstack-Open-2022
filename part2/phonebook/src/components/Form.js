@@ -1,16 +1,43 @@
 /** @format */
 
 import React from "react";
+import server from "../services/server";
 
-const Form = ({ people, newPerson, newNumber, updateText, updateNumber, updatePerson }) => {
+const Form = ({ people, newID, newPerson, newNumber, updateText, updateNumber, updatePerson }) => {
 	const handlePersonChange = (event) => updateText(event.target.value);
+
 	const handlenNumberChange = (event) => updateNumber(event.target.value);
+
+	const exist = () => {
+		const target = people.find(
+			(person) => person.name === newPerson && person.number !== newNumber
+		);
+
+		if (target) {
+			const msg = `${target.name} is already added to phonebook, replace the old number with a new one?`;
+			if (window.confirm(msg)) {
+				target.number = newNumber;
+			}
+		} else
+			target = {
+				name: newPerson,
+				number: newNumber,
+				id: newID + 1,
+			};
+
+		const idx = people.indexOf(target);
+		const ret = people;
+		idx === -1 ? ret.append(target) : (ret[idx] = target);
+		return people;
+	};
 
 	const handleSubmit = (event) => {
 		event.preventDefault();
 
-		const newArray = people.filter((person) => person.name === newPerson);
-		if (newArray.length > 0) {
+		const newArray = people.find(
+			(person) => person.name === newPerson && person.number === newNumber
+		);
+		if (newArray) {
 			alert(`${newPerson} is already added to phonebook`);
 			event.target.value = "";
 			return;
@@ -20,15 +47,12 @@ const Form = ({ people, newPerson, newNumber, updateText, updateNumber, updatePe
 			return;
 		}
 
-		const personObj = {
-			name: newPerson,
-			number: newNumber,
-			id: people.length + 1,
-		};
-
-		updatePerson(people.concat(personObj));
-		updateText("");
-		updateNumber("");
+		const personObj = exist();
+		server.create(personObj).then(() => {
+			updatePerson(personObj);
+			updateText("");
+			updateNumber("");
+		});
 	};
 
 	return (
