@@ -7,7 +7,7 @@ const axios = require("axios");
 const Weather = ({ country }) => {
 	const [newWeather, setWeather] = useState([]);
 	const [statusRdy, setStatusRdy] = useState(false);
-	const api_key = process.env.REACT_APP_WEATHER_API_KEY;
+	const api_key = process.env.REACT_APP_API_KEY;
 
 	useEffect(() => {
 		axios
@@ -17,7 +17,7 @@ const Weather = ({ country }) => {
 				setWeather(weatherData);
 				setStatusRdy(true);
 			});
-	}, [link]);
+	}, [country]);
 
 	if (statusRdy) {
 		return (
