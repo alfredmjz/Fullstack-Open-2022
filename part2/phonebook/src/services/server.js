@@ -13,11 +13,10 @@ const create = (newObject) => {
 	return promise.then((res) => res.data);
 };
 
-// json-server bug, PUT does not create new entity when refered to an non-existing one
-// const update = (newObject) => {
-// 	const promise = axios.put(baseUrl, newObject);
-// 	return promise.then((res) => res.data);
-// };
+const update = (newObject, id) => {
+	const promise = axios.put(`${baseUrl}/${id}`, newObject);
+	return promise.then((res) => res.data);
+};
 
 const remove = (targetObject, id) => {
 	const promise = axios.delete(`${baseUrl}/${id}`, JSON.stringify(targetObject), {
@@ -28,4 +27,4 @@ const remove = (targetObject, id) => {
 	return promise.then((res) => res.status);
 };
 
-export default { getAll, create, remove };
+export default { getAll, create, remove, update };

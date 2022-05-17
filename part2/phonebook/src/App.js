@@ -8,13 +8,10 @@ import server from "./services/server";
 
 const App = () => {
 	const [persons, setPersons] = useState([]);
-	const [id, setID] = useState(0);
-	const [newName, setNewName] = useState("");
-	const [newNumber, setNewNumber] = useState("");
+	const [id, setID] = useState(1);
 	const [newFilter, setFilter] = useState("");
 
 	useEffect(() => {
-		console.log("render");
 		server
 			.getAll()
 			.then((returned) => {
@@ -23,7 +20,7 @@ const App = () => {
 				setID(returned[lastIdx].id);
 			})
 			.catch((err) => console.log("No data. Add new data"));
-	}, []);
+	}, [id]);
 
 	return (
 		<div>
@@ -34,15 +31,8 @@ const App = () => {
 			</section>
 			<section>
 				<h2>add a new</h2>
-				<Form
-					people={persons}
-					newID={id}
-					newPerson={newName}
-					newNumber={newNumber}
-					updatePerson={setPersons}
-					updateText={setNewName}
-					updateNumber={setNewNumber}
-				/>
+
+				<Form people={persons} newID={id} updatePerson={setPersons} updateID={setID} />
 			</section>
 			<section>
 				<h2>Numbers</h2>

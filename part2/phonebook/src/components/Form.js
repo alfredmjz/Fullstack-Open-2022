@@ -1,44 +1,46 @@
 /** @format */
 
 import React from "react";
+import { useState } from "react";
 import server from "../services/server";
+import Notification from "./Notification";
 
-const Form = ({ people, newID, newPerson, newNumber, updateText, updateNumber, updatePerson }) => {
-	const handlePersonChange = (event) => updateText(event.target.value);
-
-	const handlenNumberChange = (event) => updateNumber(event.target.value);
+const Form = ({ people, newID, updatePerson, updateID }) => {
+	const [newName, setName] = useState("");
+	const [newNumber, setNumber] = useState("");
+	const [style, updateStyle] = useState("notification");
+	const [text, updateText] = useState("");
 
 	const exist = () => {
-		const target = people.find(
-			(person) => person.name === newPerson && person.number !== newNumber
-		);
+		const copy = [...people];
+		let target = people.find((person) => person.name === newName && person.number !== newNumber);
 
 		if (target) {
 			const msg = `${target.name} is already added to phonebook, replace the old number with a new one?`;
 			if (window.confirm(msg)) {
 				target.number = newNumber;
-			}
-		} else
+			} else target = null;
+		} else {
 			target = {
-				name: newPerson,
+				name: newName,
 				number: newNumber,
 				id: newID + 1,
 			};
-
+		}
 		const idx = people.indexOf(target);
-		const ret = people;
-		idx === -1 ? ret.append(target) : (ret[idx] = target);
-		return people;
+		idx === -1 ? copy.push(target) : (copy[idx] = target);
+		return [copy, target, idx];
 	};
 
 	const handleSubmit = (event) => {
 		event.preventDefault();
+		updateStyle("notification");
 
 		const newArray = people.find(
-			(person) => person.name === newPerson && person.number === newNumber
+			(person) => person.name === newName && person.number === newNumber
 		);
 		if (newArray) {
-			alert(`${newPerson} is already added to phonebook`);
+			alert(`${newName} is already added to phonebook`);
 			event.target.value = "";
 			return;
 		} else if (newNumber === "") {
@@ -47,22 +49,44 @@ const Form = ({ people, newID, newPerson, newNumber, updateText, updateNumber, u
 			return;
 		}
 
-		const personObj = exist();
-		server.create(personObj).then(() => {
-			updatePerson(personObj);
-			updateText("");
-			updateNumber("");
-		});
+		const [copy, newEntry, id] = exist();
+		if (!newEntry) return;
+
+		if (id !== -1) {
+			server
+				.update(newEntry, newEntry.id)
+				.then(() => {
+					updateText(`Updated ${newEntry.name}'s number`);
+					updatePerson(copy);
+					updateID(newEntry.id);
+					updateStyle(style.concat(" green"));
+				})
+				.catch((err) => {
+					updateText(`Information of ${newEntry.name} has already been removed from the server`);
+					updateStyle(style.concat(" red"));
+				});
+		} else {
+			server.create(newEntry).then(() => {
+				updateText(`Added ${newEntry.name}`);
+				updatePerson(copy);
+				updateID(newEntry.id);
+				updateStyle(style.concat(" green"));
+			});
+		}
+
+		setName("");
+		setNumber("");
 	};
 
 	return (
 		<>
+			<Notification style={style} msg={text} updateText={updateText} />
 			<form>
 				<div>
-					name: <input onChange={handlePersonChange} value={newPerson} />
+					name: <input onChange={(e) => setName(e.target.value)} value={newName} />
 				</div>
 				<div>
-					number: <input onChange={handlenNumberChange} value={newNumber} />
+					number: <input onChange={(e) => setNumber(e.target.value)} value={newNumber} />
 				</div>
 				<div>
 					<button onClick={handleSubmit} type='submit'>
