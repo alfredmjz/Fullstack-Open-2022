@@ -1,7 +1,7 @@
 /** @format */
 
 import axios from "axios";
-const baseUrl = "http://localhost:3001/persons";
+const baseUrl = "/api/persons";
 
 const getAll = () => {
 	const promise = axios.get(baseUrl);
@@ -27,4 +27,5 @@ const remove = (targetObject, id) => {
 	return promise.then((res) => res.status);
 };
 
-export default { getAll, create, remove, update };
+const exported = { getAll, create, remove, update };
+export default exported;
