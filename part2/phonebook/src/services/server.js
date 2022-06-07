@@ -17,7 +17,6 @@ const create = (newObject) => {
 
 const update = (newObject, id) => {
 	const promise = axios.put(`${baseUrl}/${id}`, newObject);
-	console.log(id);
 	return promise.then((res) => res.data);
 };
 

@@ -6,6 +6,7 @@ const Notification = ({ style, msg, updateText }) => {
 	if (msg === "") return;
 
 	setTimeout(() => {
+		clearTimeout();
 		updateText("");
 		return;
 	}, 8000);

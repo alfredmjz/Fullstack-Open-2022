@@ -26,7 +26,6 @@ const Form = ({ people, newID, updatePerson, updateID }) => {
 				number: newNumber,
 				id: newID,
 			};
-			console.log("create new ID: ", newID);
 		}
 		const idx = people.indexOf(target);
 		idx === -1 ? copy.push(target) : (copy[idx] = target);
@@ -35,7 +34,6 @@ const Form = ({ people, newID, updatePerson, updateID }) => {
 
 	const handleSubmit = (event) => {
 		event.preventDefault();
-		updateStyle("notification");
 
 		const newArray = people.find(
 			(person) => person.name === newName && person.number === newNumber
@@ -60,11 +58,18 @@ const Form = ({ people, newID, updatePerson, updateID }) => {
 					updateText(`Updated ${newEntry.name}'s number`);
 					updatePerson(copy);
 					updateID(newEntry.id);
-					updateStyle(style.concat(" green"));
+					updateStyle("notification green");
 				})
-				.catch(() => {
-					updateText(`Information of ${newEntry.name} has already been removed from the server`);
-					updateStyle(style.concat(" red"));
+				.catch((err) => {
+					if (
+						err.response.data.error ===
+						"Validation failed: number: Number is an invalid phone number"
+					) {
+						updateText(`${newEntry.number} is an invalid number`);
+					} else {
+						updateText(`Information of ${newEntry.name} has already been removed from the server`);
+					}
+					updateStyle("notification red");
 				});
 		} else {
 			server
@@ -73,11 +78,18 @@ const Form = ({ people, newID, updatePerson, updateID }) => {
 					updateText(`Added ${newEntry.name}`);
 					updatePerson(copy);
 					updateID(newEntry.id);
-					updateStyle(style.concat(" green"));
+					updateStyle("notification green");
 				})
-				.catch(() => {
-					updateText(`${newEntry.name} is not added. Name must be longer than 3 characters`);
-					updateStyle(style.concat(" red"));
+				.catch((err) => {
+					if (
+						err.response.data.error ===
+						"Entry validation failed: number: Number is an invalid phone number"
+					) {
+						updateText(`${newEntry.number} is an invalid phone number`);
+					} else {
+						updateText(`${newEntry.name} is not added. Name must be longer than 3 characters`);
+					}
+					updateStyle("notification red");
 				});
 		}
 
