@@ -5,16 +5,19 @@ const baseUrl = "/api/persons";
 
 const getAll = () => {
 	const promise = axios.get(baseUrl);
+	console.log("getAll");
 	return promise.then((res) => res.data);
 };
 
 const create = (newObject) => {
 	const promise = axios.post(baseUrl, newObject);
+	console.log("create");
 	return promise.then((res) => res.data);
 };
 
 const update = (newObject, id) => {
 	const promise = axios.put(`${baseUrl}/${id}`, newObject);
+	console.log(id);
 	return promise.then((res) => res.data);
 };
 
@@ -24,6 +27,7 @@ const remove = (targetObject, id) => {
 			"Content-Type": "application/json",
 		},
 	});
+	console.log("remove");
 	return promise.then((res) => res.status);
 };
 

@@ -24,8 +24,9 @@ const Form = ({ people, newID, updatePerson, updateID }) => {
 			target = {
 				name: newName,
 				number: newNumber,
-				id: newID + 1,
+				id: newID,
 			};
+			console.log("create new ID: ", newID);
 		}
 		const idx = people.indexOf(target);
 		idx === -1 ? copy.push(target) : (copy[idx] = target);
@@ -61,17 +62,23 @@ const Form = ({ people, newID, updatePerson, updateID }) => {
 					updateID(newEntry.id);
 					updateStyle(style.concat(" green"));
 				})
-				.catch((err) => {
+				.catch(() => {
 					updateText(`Information of ${newEntry.name} has already been removed from the server`);
 					updateStyle(style.concat(" red"));
 				});
 		} else {
-			server.create(newEntry).then(() => {
-				updateText(`Added ${newEntry.name}`);
-				updatePerson(copy);
-				updateID(newEntry.id);
-				updateStyle(style.concat(" green"));
-			});
+			server
+				.create(newEntry)
+				.then(() => {
+					updateText(`Added ${newEntry.name}`);
+					updatePerson(copy);
+					updateID(newEntry.id);
+					updateStyle(style.concat(" green"));
+				})
+				.catch(() => {
+					updateText(`${newEntry.name} is not added. Name must be longer than 3 characters`);
+					updateStyle(style.concat(" red"));
+				});
 		}
 
 		setName("");
